@@ -1,0 +1,12 @@
+(executable
+  (name driver)
+  (flags
+    (:standard -warn-error -A)))
+
+(ocamllex
+  (modules lexer))
+
+(menhir
+  (modules parser)
+  (infer true)
+  (flags (--explain --dump --graph --log-grammar 2)))

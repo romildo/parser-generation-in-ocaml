@@ -1,39 +1,36 @@
 %{
     let memory = Hashtbl.create 8
 %}
-   
 
-%token <float>  TNum
-%token <string> TId
-%token          TLParen TRParen
-%token          TAssign
-%token          TSum TMinus TProd TDiv
-%token          TSemicolon
-%token          TEOF
+%token <float>  NUM
+%token <string> ID
+%token          LPAREN RPAREN
+%token          ASSIGN
+%token          SUM MINUS PROD DIV
+%token          SEMICOLON
+%token          EOF
 
-%right TAssign
-%left  TSum TMinus
-%left  TProd TDiv
+%right ASSIGN
+%left  SUM MINUS
+%left  PROD DIV
 
 %start <unit> program;
 
 %%
 
-let program :=
- | seq; TEOF
+program:
+ | seq EOF              { }
 
-let seq :=
- | s=seq; e=exp; TSemicolon;  { print_float e; print_newline () }
- |                            { }
+seq:
+ | seq e=exp SEMICOLON  { Printf.printf "= %f\n%!" e }
+ |                      { }
 
-let exp :=
- | v=TId; TAssign; e=exp;   { Hashtbl.replace memory v e; e }
- | x=exp; TSum; y=exp;      { x +. y }
- | x=exp; TMinus; y=exp;    { x -. y }
- | x=exp; TProd; y=exp;     { x *. y }
- | x=exp; TDiv; y=exp;      { x /. y }
- | x=TNum;                  { x }
- | v=TId;                   { try Hashtbl.find memory v with Not_found -> 0. }
- | TLParen; e=exp; TRParen; { e }
-
-%%
+exp:
+ | v=ID ASSIGN e=exp    { Hashtbl.replace memory v e; e }
+ | x=exp SUM y=exp      { x +. y }
+ | x=exp MINUS y=exp    { x -. y }
+ | x=exp PROD y=exp     { x *. y }
+ | x=exp DIV y=exp      { x /. y }
+ | x=NUM                { x }
+ | v=ID                 { try Hashtbl.find memory v with Not_found -> 0. }
+ | LPAREN e=exp RPAREN  { e }

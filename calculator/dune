@@ -1,5 +1,5 @@
 (executable
-  (name driver)
+  (name calculator)
   (flags
     (:standard -warn-error -A)))
 

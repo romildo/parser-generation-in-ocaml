@@ -9,4 +9,4 @@
 (menhir
   (modules parser)
   (infer true)
-  (flags (--explain --dump --graph --log-grammar 2)))
+  (flags (--explain --dump --graph)))
